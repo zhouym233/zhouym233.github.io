@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="zhouym">
   <meta name="keywords" content="">
-  <title>归档 - zhouym&#39;s Pages</title>
+  <title>关于 - zhouym&#39;s Pages</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/3.0.1/github-markdown.min.css" />
@@ -121,27 +121,39 @@
         <div class="py-5" id="board"
           >
           
+            <div class="about-avatar">
+              <img src="/img/avatar.png" srcset="/img/loading.gif"
+                   class="img-fluid" alt="avatar">
+            </div>
+          
           <div class="container">
             <div class="row">
               <div class="col-12 col-md-10 m-auto">
                 
 
-<div class="list-group">
-  <p class="h4">共计 1 篇文章</p>
-  <hr>
-  
-    
+<div class="text-center">
+  <div class="about-info">
+    <div class="about-name">zhouym</div>
+    <div class="about-intro">XDU / EE</div>
+    <div class="about-icons">
       
-      <p class="h5">2020</p>
-    
-    <a href="/2020/04/%E6%80%8E%E4%B9%88%E5%9B%9E%E4%BA%8B%E5%91%A2/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">怎么回事呢</span>
-      <span style="float: right;">04-14</span>
-    </a>
-  
+        
+        
+        
+        <a href="https://zhouym233.github.com" target="_blank" rel="noopener" class="">
+          <i class="iconfont icon-github-fill" aria-hidden="true"></i>
+          
+        </a>
+      
+    </div>
+  </div>
 </div>
+<div class="mt-5 markdown-body">
+  <h1 id="关于"><a href="#关于" class="headerlink" title="关于"></a>关于</h1><p>&emsp;&emsp;既然大家来到了这里，就应该发现这里是zhouym的博客了呢。zhouym的博客相信大家都看过，但是zhouym是谁呢，下面就让zhouym带大家一起了解吧。</p>
+<p>&emsp;&emsp;zhouym的身份很神秘，其实他就是zhouym啦。大家可能会很惊讶zhouym怎么会是zhouym呢？但事实就是这样。zhouym早就知道了哦，所以zhouym并没有感到非常惊讶。</p>
+<p>&emsp;&emsp;以上就是’zhouym究竟是谁’的全部内容啦，不知道有没有解决你的疑惑呢？喜欢的话请收藏一下zhouym的博客哦！大家有什么想法呢，欢迎继续浏览zhouym的博客呐！</p>
 
-
+</div>
 
               </div>
             </div>
@@ -244,6 +256,20 @@
 
 
 
+  <script  src="https://cdn.staticfile.org/prettify/188.0.0/prettify.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      $('pre').each(function () {
+        const pre = $(this);
+        if (pre.find('code.mermaid').length > 0) {
+          return;
+        }
+        pre.addClass('prettyprint  linenums');
+      });
+      prettyPrint();
+    })
+  </script>
+
 
 
   <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
@@ -251,7 +277,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "归档&nbsp;",
+        "关于&nbsp;",
       ],
       cursorChar: " ",
       typeSpeed: 25,
