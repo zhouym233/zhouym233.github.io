@@ -4,6 +4,19 @@
   
   
   <entry>
+    <title>评论功能已经就绪</title>
+    <link href="/2020/04/comments-is-now-available/"/>
+    <url>/2020/04/comments-is-now-available/</url>
+    
+    <content type="html"><![CDATA[<p>基于<a href="https://utteranc.es/" target="_blank" rel="noopener">utterances</a>的评论功能现在已经就绪，欢迎发表评论。使用该功能需要Github账户授权。</p>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>怎么回事呢</title>
     <link href="/2020/04/%E6%80%8E%E4%B9%88%E5%9B%9E%E4%BA%8B%E5%91%A2/"/>
     <url>/2020/04/%E6%80%8E%E4%B9%88%E5%9B%9E%E4%BA%8B%E5%91%A2/</url>
