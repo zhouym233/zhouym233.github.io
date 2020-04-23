@@ -81,8 +81,7 @@ img[srcset] {
   color: #fff;
 }
 .white-s-text {
-  -webkit-text-stroke: 0.5px #6cf;
-  color: #0ff;
+  color: #fff;
 }
 .fadeInUp {
   -webkit-animation-name: fadeInUp;
