@@ -16,23 +16,22 @@
   <meta name="description" content="摸鱼之余，写写博客，欢迎来看看呀。">
   <meta name="author" content="zhouym">
   <meta name="keywords" content="zhouym,zhouym233,zhouyanmin">
-  <meta name="description" content="故事背景SSH爆破真是令人厌烦，动不动上万次的密码尝试属实难绷。爆破密集到一定程度甚至有点浪费我宝贵的服务器带宽，并且有点担心我那并不算长的密码被试出来。改端口和禁用密码验证是可行方案，但是会造成一定程度上的不便，本懒狗暂时不考虑。   初步尝试网上随便搜了搜教程，了解到可以用pam_tally2模块来防爆破。配置好这个模块后才发现，该模块的行为是  限制登录失败时可以锁定用户一段时间，就算密码输">
+  <meta name="description" content="这又是什么需求众所周知，锂电池在长时间保持高电量的情况下容易鼓包。我本以为一代更比一代强的电源管理系统会解决这个问题，但是并不一定可靠。我放在房间里挂机的小米6就这么鼓包了，虽然也可能和温度有点关系。于是我决定换块电池，并且降低充电截至电压以避免电量过高，从而延长寿命。反正电池对它来说不过是个UPS罢了。 操作方法大致上有两种思路供您选择：复杂优雅简单粗暴 方法一 修改电池配置文件 复杂优雅情况一">
 <meta property="og:type" content="article">
-<meta property="og:title" content="用fail2ban屏蔽SSH爆破">
-<meta property="og:url" content="https://zhouym.tech/2021/fail2ban/index.html">
+<meta property="og:title" content="降低Android设备的充电电压">
+<meta property="og:url" content="https://zhouym.tech/2022/Protect-battery-on-Android/index.html">
 <meta property="og:site_name" content="我只会摸鱼">
-<meta property="og:description" content="故事背景SSH爆破真是令人厌烦，动不动上万次的密码尝试属实难绷。爆破密集到一定程度甚至有点浪费我宝贵的服务器带宽，并且有点担心我那并不算长的密码被试出来。改端口和禁用密码验证是可行方案，但是会造成一定程度上的不便，本懒狗暂时不考虑。   初步尝试网上随便搜了搜教程，了解到可以用pam_tally2模块来防爆破。配置好这个模块后才发现，该模块的行为是  限制登录失败时可以锁定用户一段时间，就算密码输">
+<meta property="og:description" content="这又是什么需求众所周知，锂电池在长时间保持高电量的情况下容易鼓包。我本以为一代更比一代强的电源管理系统会解决这个问题，但是并不一定可靠。我放在房间里挂机的小米6就这么鼓包了，虽然也可能和温度有点关系。于是我决定换块电池，并且降低充电截至电压以避免电量过高，从而延长寿命。反正电池对它来说不过是个UPS罢了。 操作方法大致上有两种思路供您选择：复杂优雅简单粗暴 方法一 修改电池配置文件 复杂优雅情况一">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://zhouym.tech/images/SSH.png">
-<meta property="og:image" content="https://zhouym.tech/images/fail2ban_status.png">
-<meta property="article:published_time" content="2021-12-01T14:15:59.000Z">
-<meta property="article:modified_time" content="2021-12-09T16:24:20.742Z">
+<meta property="og:image" content="https://zhouym.tech/images/mi6battery.jpg">
+<meta property="article:published_time" content="2022-02-11T08:40:42.000Z">
+<meta property="article:modified_time" content="2022-02-11T10:34:40.049Z">
 <meta property="article:author" content="zhouym">
 <meta property="article:tag" content="zhouym,zhouym233,zhouyanmin">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://zhouym.tech/images/SSH.png">
+<meta name="twitter:image" content="https://zhouym.tech/images/mi6battery.jpg">
   
-  <title>用fail2ban屏蔽SSH爆破 - 我只会摸鱼</title>
+  <title>降低Android设备的充电电压 - 我只会摸鱼</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/bootstrap/4.6.0/css/bootstrap.min.css" />
 
@@ -166,7 +165,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.2)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="用fail2ban屏蔽SSH爆破">
+            <span class="h2" id="subtitle" title="降低Android设备的充电电压">
               
             </span>
 
@@ -176,8 +175,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-12-01 22:15" pubdate>
-        2021年12月1日 晚上
+      <time datetime="2022-02-11 16:40" pubdate>
+        2022年2月11日 下午
       </time>
     </span>
   
@@ -187,7 +186,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      863 字
+      1.5k 字
     </span>
   
 
@@ -196,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      3 分钟
+      5 分钟
     </span>
   
 
@@ -225,29 +224,29 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">用fail2ban屏蔽SSH爆破</h1>
+            <h1 style="display: none">降低Android设备的充电电压</h1>
             
             <div class="markdown-body">
-              <h1 id="故事背景"><a href="#故事背景" class="headerlink" title="故事背景"></a>故事背景</h1><p>SSH爆破真是令人厌烦，动不动上万次的密码尝试属实难绷。<br>爆破密集到一定程度甚至有点浪费我宝贵的服务器带宽，并且有点担心我那并不算长的密码被试出来。<br>改端口和禁用密码验证是可行方案，但是会造成一定程度上的不便，本懒狗暂时不考虑。</p>
-<p><img src="/images/SSH.png" srcset="/img/loading.gif" lazyload width = "80%"  alt="老是有人爆破我SSH" /></p>
+              <h2 id="这又是什么需求"><a href="#这又是什么需求" class="headerlink" title="这又是什么需求"></a>这又是什么需求</h2><p>众所周知，锂电池在长时间保持高电量的情况下容易鼓包。我本以为一代更比一代强的电源管理系统会解决这个问题，但是并不一定可靠。我放在房间里挂机的小米6就这么鼓包了，虽然也可能和温度有点关系。于是我决定换块电池，并且降低充电截至电压以避免电量过高，从而延长寿命。反正电池对它来说不过是个UPS罢了。</p>
+<h2 id="操作方法"><a href="#操作方法" class="headerlink" title="操作方法"></a>操作方法</h2><p>大致上有两种思路供您选择：<br><a href="#%E6%96%B9%E6%B3%95%E4%B8%80-%E4%BF%AE%E6%94%B9%E7%94%B5%E6%B1%A0%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-%E5%A4%8D%E6%9D%82%E4%BC%98%E9%9B%85">复杂优雅</a><br><a href="#%E6%96%B9%E6%B3%95%E4%BA%8C-%E5%90%91%E5%86%85%E6%A0%B8%E8%8A%82%E7%82%B9%E4%BC%A0%E9%80%92%E6%95%B0%E6%8D%AE-%E7%AE%80%E5%8D%95%E7%B2%97%E6%9A%B4">简单粗暴</a></p>
+<h3 id="方法一-修改电池配置文件-复杂优雅"><a href="#方法一-修改电池配置文件-复杂优雅" class="headerlink" title="方法一 修改电池配置文件 复杂优雅"></a>方法一 修改电池配置文件 复杂优雅</h3><h4 id="情况一"><a href="#情况一" class="headerlink" title="情况一"></a>情况一</h4><p>如果你的手机有单独的dtbo分区，那你可以对这个分区中的内容进行修改以达到目的。<br>首先你需要一个Linux环境，并获得mkdtimg和dtc这两个可执行文件。这两个是Android工具链中的文件，可以通用的，网上能找到编译好的（试了下挺难找的，我放个在这里吧，适用于Linux_X86，<a target="_blank" rel="noopener" href="https://wwi.lanzouw.com/i29Ukzwuwji">下载</a>）。  </p>
+<p>从 dtbo.img 中解出 dtb ：<br><code>mkdtimg dump dtbo.img -b &lt;filename&gt;  </code><br>把 dtb 文件转成 dts ：<br><code>dtc -I dtb -O dts &lt;dtb_filename&gt; -o &lt;dts_filename&gt;</code>  </p>
+<p>以上是抄来的命令，原文在<a target="_blank" rel="noopener" href="https://blog.csdn.net/qianxuedegushi/article/details/107224575">这个链接</a>。<br>因为里面可能有很多个dts文件，对应很多个设备，你可以写个循环执行的bash脚本来执行命令。</p>
+<p>在里面找到对应你的设备的dts文件（找不到的话可以试试全改了），在其中找到<br>对应电池型号的电压一行，进行修改（16进制数值），<strong>注意检查数值</strong>噢，要是改炸了（物理）可不能怪我。<br>修改完成后，</p>
+<p>把 dts 文件转成 dtb ：<br><code>dtc -O dtb -o &lt;dtb_filename&gt; &lt;dts_filename&gt;</code>  </p>
+<p>把 dtb 合成 dtbo.img  ：<br><code>mkdtimg create new-dtbo.img --page_size=4096 dtb.0 dtb.1 dtb.2 ...   </code><br>此处要把所有dtb文件都填进去</p>
+<h4 id="情况二"><a href="#情况二" class="headerlink" title="情况二"></a>情况二</h4><p>如果你的手机没单独的dtbo分区</p>
+<p>尝试解压boot.img（可以试试用<a target="_blank" rel="noopener" href="https://github.com/cfig/Android_boot_image_editor">这个工具</a>），看看里面有无dtbo/dtb文件，然后按 <a href="#%E6%83%85%E5%86%B5%E4%B8%80">情况一</a> 修改。</p>
+<p>如果解压不出dtbo或其类似物（比如小米6），则需要修改源码并<strong>从源码编译内核</strong>（或者你可以试试继续解包内核的zImage，反正这我不会了）。<br>修改的位置很容易找到，比如小米6的电池配置在内核源码的arch/arm/boot/dts/qcom/xiaomi/batterydata-sagit-atl-3350mAh.dtsi。<br>然后编译内核并刷入，是不是很简单（并不），太麻烦了这里就不展示了，之前在一台旧手机上实践过，电池再也没鼓包。</p>
+<h3 id="方法二-向内核节点传递数据-简单粗暴"><a href="#方法二-向内核节点传递数据-简单粗暴" class="headerlink" title="方法二 向内核节点传递数据 简单粗暴"></a>方法二 向内核节点传递数据 简单粗暴</h3><p>每次开机后使用超级用户权限执行命令 </p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">chmod <span class="hljs-number">777</span> /sys/<span class="hljs-keyword">class</span>/<span class="hljs-symbol">power_supply</span>/*/*<br><span class="hljs-symbol">echo</span> &#x27;<span class="hljs-symbol">4280000</span>&#x27; &gt; /<span class="hljs-symbol">sys</span>/<span class="hljs-symbol">class</span>/<span class="hljs-symbol">power_supply</span>/<span class="hljs-symbol">battery</span>/<span class="hljs-symbol">voltage_max</span><br></code></pre></td></tr></table></figure>
+<p>以上数值4280000代表4.28V,<strong>不同手机可能单位不一样，文件位置也不一样，需要先读取原有数值后参考修改</strong><br>可用<code>cat /sys/class/power_supply/battery/voltage_max</code>指令读取原有数值<br>建议在执行前sleep个60秒，防止系统启动过程中被覆盖。<br>我做了个Magisk模块来实现它。<a target="_blank" rel="noopener" href="https://wwi.lanzouw.com/iekX4zwyhib">传送门</a><br>小米6亲测有效，电压被有效限制。</p>
+<p>
+<img src="/images/mi6battery.jpg" srcset="/img/loading.gif" lazyload  width = 50% alt="小米6上测试">
+</p>
 
-<h1 id="初步尝试"><a href="#初步尝试" class="headerlink" title="初步尝试"></a>初步尝试</h1><p>网上随便搜了搜教程，了解到可以用pam_tally2模块来防爆破。<br>配置好这个模块后才发现，该模块的行为是</p>
-<blockquote>
-<p>限制登录失败时可以锁定用户一段时间，就算密码输入正确也无法登录，等恢复之后才可以再次进入。</p>
-</blockquote>
-<p>也就是说，检测到多次密码失败后会锁定账户，然后我自己也登不上去了，不太符合云服务器的使用场景。</p>
-<h1 id="使用fail2ban"><a href="#使用fail2ban" class="headerlink" title="使用fail2ban"></a>使用fail2ban</h1><p>随后搜到个叫<a target="_blank" rel="noopener" href="https://github.com/fail2ban/fail2ban/wiki">fail2ban</a>的包，可以检测到多次密码尝试错误后封禁IP，很贴合需求。<br>我这里用的是CentOS 7.9，其他发行版可能在实际配置上有差异。</p>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p><code>yum install fail2ban</code></p>
-<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>根据文档建议，新建一个配置文件<br><code>vim /etc/fail2ban/jail.local</code></p>
-<p>内容如下：  </p>
-<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">[DEFAULT]<br># time <span class="hljs-keyword">is</span> <span class="hljs-keyword">in</span> seconds. <span class="hljs-number">3600</span> = <span class="hljs-number">1</span> hour, <span class="hljs-number">86400</span> = <span class="hljs-number">24</span> hours (<span class="hljs-number">1</span> day)<br>findtime    = <span class="hljs-number">1800</span><br>bantime     = <span class="hljs-number">43200</span><br>maxretry    = <span class="hljs-number">5</span><br>ignoreip    = <span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span> <span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span>/<span class="hljs-number">8</span> <span class="hljs-number">10.0</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span>/<span class="hljs-number">8</span> <span class="hljs-number">172.16</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span>/<span class="hljs-number">12</span> <span class="hljs-number">192.168</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span>/<span class="hljs-number">16</span><br><br>[sshd]<br>enabled = <span class="hljs-literal">true</span><br></code></pre></td></tr></table></figure>
-<p>可以根据需要修改数值。<br>按<code>Esc</code>后<code>：wq</code>保存，懂的都懂。</p>
-<h2 id="应用并开启开机自启动"><a href="#应用并开启开机自启动" class="headerlink" title="应用并开启开机自启动"></a>应用并开启开机自启动</h2><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">systemctl</span> enable fail<span class="hljs-number">2</span>ban<br><span class="hljs-attribute">systemctl</span> restart fail<span class="hljs-number">2</span>ban<br></code></pre></td></tr></table></figure>
-<h2 id="查询阻挡状态"><a href="#查询阻挡状态" class="headerlink" title="查询阻挡状态"></a>查询阻挡状态</h2><figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs axapta">fail2ban-<span class="hljs-keyword">client</span> status<br>fail2ban-<span class="hljs-keyword">client</span> status sshd<br></code></pre></td></tr></table></figure>
-<p><img src="/images/fail2ban_status.png" srcset="/img/loading.gif" lazyload width = "80%"  alt="查看状态" /></p>
-
-<h1 id="说点废话"><a href="#说点废话" class="headerlink" title="说点废话"></a>说点废话</h1><p>部署这个之后，用<code>lastb</code>查到的登陆失败日志大幅减少，再也不怕SSH爆破了。<br>看到有的文章中改了很多配置项，有点麻烦，实测只要配置<code>jail.local</code>中几行就能够正常工作了，</p>
-<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/ba0f77a83a63">Centos7.4安装放暴力破解工具fail2ban</a></p>
+<h2 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h2><p>Q：什么不用scene4中的充电限制功能<br>A：scene4中的充电限制是充电到一定程度后断开电源，由电池供电，电量下降到一定程度后再充电。而我不希望电池频繁充放电。</p>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p>以上操作具有一定风险，请确认完全理解以上操作后在进行实践，若出现任何问题本人概不负责！祝您的手机健康长寿！</p>
 
             </div>
             <hr>
@@ -268,18 +267,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/Protect-battery-on-Android/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">降低Android设备的充电电压</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/Syncthing/">
-                        <span class="hidden-mobile">使用Syncthing进行单向备份</span>
+                      <a href="/2021/fail2ban/">
+                        <span class="hidden-mobile">用fail2ban屏蔽SSH爆破</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
