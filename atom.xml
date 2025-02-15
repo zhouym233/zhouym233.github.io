@@ -106,12 +106,12 @@
     <link href="https://zhouym.tech/2020/dex2oat-fix/"/>
     <id>https://zhouym.tech/2020/dex2oat-fix/</id>
     <published>2020-09-12T15:12:57.000Z</published>
-    <updated>2025-02-15T09:54:58.835Z</updated>
+    <updated>2025-02-15T10:28:04.600Z</updated>
     
     <content type="html"><![CDATA[<h1 id="对-LG-G8-的-MIUI12-中的重大性能问题进行简易修复"><a href="#对-LG-G8-的-MIUI12-中的重大性能问题进行简易修复" class="headerlink" title="对 LG G8 的 MIUI12 中的重大性能问题进行简易修复"></a>对 LG G8 的 MIUI12 中的重大性能问题进行简易修复</h1><h2 id="废话"><a href="#废话" class="headerlink" title="废话"></a>废话</h2><p>细心的观众朋友们可能已经发现了，</p><p>LG G8 的 MIUI12 存在比较奇怪的性能问题。</p><p>主要体现在应用启动很慢，RAM 消耗大，12G RAM 也不够用，但是应用安装速度极快。</p><p>经过我多日研究，发现了问题所在：</p><p>该 MIUI12 ROM 包的 dex2oat 功能未能正常工作，安装应用时 dex2oat 过程报错并且被跳过。</p><p><a href="https://source.android.google.cn/devices/tech/dalvik#AOT_compilation">dex2oat</a> 的作用：</p><blockquote><p>Android Runtime (ART) 引入了预先编译机制，可提高应用的性能。<br>ART 使用设备自带的 dex2oat 工具来编译应用。</p></blockquote><p>向开发者反馈没有得到有效结果，所以我研究了一下发现了解决方案。</p><p>一般魔改 ROM 需要进行 deodex 操作避免冲突，但这个 MIUI12 ROM 并没有做。</p><p>真麻烦，还得自己动手。</p><h2 id="教程开始"><a href="#教程开始" class="headerlink" title="教程开始"></a>教程开始</h2><p>可以选择手动修改或者安装Magisk模块</p><h3 id="手动修改"><a href="#手动修改" class="headerlink" title="手动修改"></a>手动修改</h3><p>使用文件管理器，</p><p>进入&#x2F;system&#x2F;framework，</p><p>删除 arm, arm64, oat 三个文件夹，</p><p>并删除所有.vdex 格式的文件，</p><p>重启。</p> <!-- ![DeleteThese](/images/DeleteThese.jpg?57) --><p><img src="/images/DeleteThese.jpg" width = "40%" alt="DeleteThese"  /></p><!-- ![DeleteTheseToo](/images/DeleteTheseToo.jpg?) --><p><img src="/images/DeleteTheseToo.jpg" width = "40%"  alt="DeleteTheseToo" /></p><p><em>需要删除的文件示例</em></p><h3 id="使用-Magisk-模块"><a href="#使用-Magisk-模块" class="headerlink" title="使用 Magisk 模块"></a>使用 Magisk 模块</h3><p><a href="https://www.lanzoux.com/iRO36gkg0pc">下载地址</a></p><h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p><strong>重启时需要大约 10 分钟进行开机优化</strong></p><p><strong>不保证该操作绝对安全可靠，使用以上方案即视为同意承担可能出现的不良后果</strong></p><p><strong>请在掌握救砖方法且备份好重要数据后进行操作</strong></p><p><strong>仅修复LG G8的MIUI12的迷惑问题，对其他功能正常的ROM有负面影响，切勿乱用</strong></p><h2 id="效果展示"><a href="#效果展示" class="headerlink" title="效果展示"></a>效果展示</h2><p><img src="/images/RAM_Usage_compare.jpg"></p><p>应用启动速度快了不少呢！</p><p>骁龙855用起来又像是骁龙855了呢！</p><p>敏感肌也能用哦！</p>]]></content>
     
     
-    <summary type="html">花钱买的第三方第三方ROM出现恶性bug却只能自己解决</summary>
+    <summary type="html">花钱买的第三方ROM出现恶性bug却只能自己解决</summary>
     
     
     
