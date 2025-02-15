@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0"
+  xmlns:atom="http://www.w3.org/2005/Atom"
+  xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>我只会摸鱼</title>
+    <link>https://zhouym.tech/</link>
+    
+    <atom:link href="https://zhouym.tech/rss2.xml" rel="self" type="application/rss+xml"/>
+    
+    <description>摸鱼之余，写写博客，欢迎来看看呀。</description>
+    <pubDate>Sun, 14 Aug 2022 04:04:39 GMT</pubDate>
+    <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>通过IPV6实现远程开机</title>
+      <link>https://zhouym.tech/2022/Wake-On-Lan/</link>
+      <guid>https://zhouym.tech/2022/Wake-On-Lan/</guid>
+      <pubDate>Sat, 13 Aug 2022 10:19:02 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;经典废话环节&quot;&gt;&lt;a href=&quot;#经典废话环节&quot; class=&quot;headerlink&quot;</description>
+          
+        
+      
+      
+      
+      <content:encoded><![CDATA[<h2 id="经典废话环节"><a href="#经典废话环节" class="headerlink" title="经典废话环节"></a>经典废话环节</h2><p>总之就是最近有了远程访问家里电脑的需求，但是也不是很频繁，让家里电脑一直开着有点不环保，所以来整个远程开机吧！</p><h2 id="实现思路"><a href="#实现思路" class="headerlink" title="实现思路"></a>实现思路</h2><h3 id="最初的想法"><a href="#最初的想法" class="headerlink" title="最初的想法"></a>最初的想法</h3><p>目前家中的网络架构比较简陋。当前使用的是千兆宽带，受限于弱电箱空间和弱电箱供电以及预埋线路质量等一系列原因，目前只放了一个电信光猫（Huawei HN8145V 10G-GPON）在弱电箱里，没有用上我心爱的OpenWRT，不然就一个插件轻松搞定了。 </p><p>本来我是想直接把光猫或者待开机的电脑的IPV6地址通过DDNS暴露出去，然后直接远程发包的，然而这光猫的DDNS功能甚至不支持ipv6,第一步就尬住了，直接放弃。</p><p>后来发现了前人走过的路，<a href="https://gitee.com/itrycn/MyEasyWOL">MyEasyWOL</a>，可惜Android服务端安装包有点不兼容装不上，客户端是好的。</p><h3 id="终极解决方案"><a href="#终极解决方案" class="headerlink" title="终极解决方案"></a>终极解决方案</h3><p>在内网再放一台保持开启且高自由度的设备，作为远程开机的桥梁。<br>经过多次踩坑之后，最终的方案是：<br>在我吃灰的小米6上通过<a href="https://github.com/meefik/linuxdeploy">Linux Deploy</a>运行Ubuntu，在Ubuntu上运行<a href="https://github.com/xiaoxinpro/WolGoWeb">WolGoWeb</a>和<a href="https://github.com/jeessy2/ddns-go">ddns-go</a>，使用<a href="https://gitee.com/itrycn/MyEasyWOL">MyEasyWOL</a>发起唤醒。</p><h2 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h2><h3 id="事前准备"><a href="#事前准备" class="headerlink" title="事前准备"></a>事前准备</h3><p>首先你需要一台拥有Root权限的Android机器，并保持常供电。如果担心常供电下电池怀孕，可以参考<a href="https://zhouym.tech/2022/Protect-battery-on-Android/">我之前的文章</a>。<br>确认你拥有2开头的公网IPv6地址且网络可用，并且有权限在防火墙上放行端口或关闭IPv6防火墙，例如我使用超级管理员账户关掉了光猫的IPv6防火墙（这玩意儿似乎不能指定放行单个端口）。</p><h3 id="安装并设置Linux-Deploy"><a href="#安装并设置Linux-Deploy" class="headerlink" title="安装并设置Linux Deploy"></a>安装并设置<a href="https://github.com/meefik/linuxdeploy">Linux Deploy</a></h3><p>下载<a href="https://github.com/meefik/linuxdeploy">Linux Deploy</a>并安装打开。<br>在右下角的设置里：</p><ol><li>选择你想要安装的Linux发行版，这里我出于使用习惯考虑安装了Ubuntu。</li><li>为了提高国内访问速度，源地址相应改成</li></ol><p><code>https://mirrors.ustc.edu.cn/ubuntu-ports/</code><br>架构一般选择 arm64&#x2F;aarch64，除非你的手机是32位古董或者其他神奇架构。<br>   3. 设置一下用户密码<br>        <p><br>        <img src="/images/Linux属性1.jpg"  width = 50% alt="Linux属性设置"><br>        </p><br>   4. 启用初始化系统和SSH选项，方便相应服务开机自启和远程终端控制。<br>        <p><br>        <img src="/images/Linux属性2.jpg"  width = 50% alt="Linux属性设置2"><br>        </p><br>   5. 其他不需要动，我也没弄懂</p><ol start="6"><li>返回上一层，在左上角的菜单中打开设置，启用CPU唤醒和开机自启动，确保服务的可用。</li><li>返回上一层，在右上角的三个点菜单里选择安装，并等待安装完成。</li><li>安装完成后，点击下方按钮启动容器。</li></ol><h3 id="SSH连接到Ubuntu"><a href="#SSH连接到Ubuntu" class="headerlink" title="SSH连接到Ubuntu"></a>SSH连接到Ubuntu</h3><p>使用其他设备或其他终端程序，通过SSH连接到Ubuntu。例如Xshell。<br>将默认终端改为<code>/bin/bash</code>，不然按个退格都费劲。默认的<code>/bin/sh</code>需要按着Ctrl才能退格。<br>    <figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk">chsh<br><span class="hljs-regexp">/bin/</span>bash<br></code></pre></td></tr></table></figure><br>    安装nano作为默认编辑器，也是因为vi难退格<br>    <code>sudo apt install nano</code><br>    安装wget<br>    <code>sudo apt install wget</code></p><h3 id="安装ddns-go"><a href="#安装ddns-go" class="headerlink" title="安装ddns-go"></a>安装ddns-go</h3><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">wget</span> https://github.com/jeessy2/ddns-go/releases/download/v4.<span class="hljs-number">0</span>.<span class="hljs-number">4</span>/ddns-go_4.<span class="hljs-number">0</span>.<span class="hljs-number">4</span>_Linux_arm64.tar.gz<br><span class="hljs-attribute">tar</span> -xzvf ddns-go_4.<span class="hljs-number">0</span>.<span class="hljs-number">4</span>_Linux_arm64.tar.gz<br></code></pre></td></tr></table></figure><p>赋予运行权限<br><code>chmod +x ddns-go</code><br>运行一下试试<br><code>./ddns-go</code><br>打开 http:&#x2F;&#x2F;手机IP地址:9876&#x2F; ,即可进入配置界面，懂得都懂，懒得写了，自己看<a href="https://github.com/jeessy2/ddns-go#readme">ddns-go的文档</a>吧，记得勾选ipv6就行。</p><p>    <img src="/images/ddns-go.png"  width = 50% alt="ddns-go"></p>      <h3 id="安装WolGoWeb"><a href="#安装WolGoWeb" class="headerlink" title="安装WolGoWeb"></a>安装WolGoWeb</h3><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">wget</span> https://github.com/xiaoxinpro/WolGoWeb/releases/download/V0.<span class="hljs-number">0</span>.<span class="hljs-number">4</span>/WolGoWeb_0.<span class="hljs-number">0</span>.<span class="hljs-number">4</span>_linux_arm64<br></code></pre></td></tr></table></figure><p>可能有更新的版本，不妨先去Release页看看<br>改个文件名，不然好长一串<br><code>mv WolGoWeb_0.0.4_linux_arm64 wolgoweb</code><br>赋予运行权限<br><code>chmod +x wolgoweb</code><br>运行一下试试<br><code>./wolgoweb</code><br>可以自己先在内网试试好不好使，默认端口9090。<br>打开 <code>http://手机DDNS域名或IP地址:9090/</code> 就能看到提示页</p><p>        <img src="/images/WolGoWeb.png"  width = 50% alt="WolGoWeb"></p>用法是这样，浏览器访问<p>http:&#x2F;&#x2F;你的域名或IP地址:9090&#x2F;wol?mac&#x3D;00-00-00-00-00-00 （改成你的电脑网卡MAC地址）  </p><p>像这样就是成功发出唤醒魔术包了。</p><p>    <img src="/images/唤醒.png"  width = 50% alt="成功发包"></p>现在就试试看你的电脑有没有开机吧。记得把网络唤醒/PCIE唤醒等设置打开，不会的自己搜搜吧。<h3 id="设置自启动"><a href="#设置自启动" class="headerlink" title="设置自启动"></a>设置自启动</h3><p>因为LinuxDeploy下不能使用systemctl，只能使用其他的初始化方法。记得在Linux属性里启用初始化系统（第3步）。<br><code>sudo nano /etc/rc.local</code><br>添加内容</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/sh</span><br><span class="hljs-comment">#</span><br><span class="hljs-built_in">nohup</span> /home/android/ddns-go &amp;<br><span class="hljs-built_in">nohup</span> /home/android/wolgoweb &amp;<br></code></pre></td></tr></table></figure><p>如果你的目录不一样，那自己改吧。<br><code>Ctrl+s</code>保存，<code>Ctrl+x</code>退出<br>加权限<br><code>chmod +x /etc/rc.local</code><br>在手机上重启一下Ubuntu，试试有没有自启动。</p><h3 id="安装手机客户端"><a href="#安装手机客户端" class="headerlink" title="安装手机客户端"></a>安装手机客户端</h3><p>这里用的是<a href="https://gitee.com/itrycn/MyEasyWOL">MyEasyWOL</a>的客户端，其他的wol应用不知道行不行，懒得试了。<br>添加服务器信息：</p><p>    <img src="/images/ddns客户端-服务器设置.jpg"  width = 50% alt="添加服务端信息"></p>添加待唤醒设备信息：<p>    <img src="/images/ddns客户端-唤醒目标设置.jpg"  width = 50% alt="待唤醒设备信息"></p>然后像这样就发包成功啦：<p>    <img src="/images/发包成功.jpg"  width = 50% alt="发包成功"></p>试试看电脑有没有开机成功吧。<h2 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h2><p>由于这个只需要访问一个URL就能唤醒电脑，所以弄个Siri指令或是小爱同学联动啥的也是很简单的，发挥想象吧！ </p><p>不觉得这很酷吗?作为一名理工男我觉得这太酷了，很符合我对网络唤醒的想象，科技并带着趣味。</p>]]></content:encoded>
+      
+      
+      
+      
+      <comments>https://zhouym.tech/2022/Wake-On-Lan/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>降低Android设备的充电电压</title>
+      <link>https://zhouym.tech/2022/Protect-battery-on-Android/</link>
+      <guid>https://zhouym.tech/2022/Protect-battery-on-Android/</guid>
+      <pubDate>Fri, 11 Feb 2022 08:40:42 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h2 id=&quot;这又是什么需求&quot;&gt;&lt;a href=&quot;#这又是什么需求&quot; class=&quot;headerlink&quot;</description>
+          
+        
+      
+      
+      
+      <content:encoded><![CDATA[<h2 id="这又是什么需求"><a href="#这又是什么需求" class="headerlink" title="这又是什么需求"></a>这又是什么需求</h2><p>众所周知，锂电池在长时间保持高电量的情况下容易鼓包。我本以为一代更比一代强的电源管理系统会解决这个问题，但是并不一定可靠。我放在房间里挂机的小米6就这么鼓包了，虽然也可能和温度有点关系。于是我决定换块电池，并且降低充电截至电压以避免电量过高，从而延长寿命。反正电池对长期插电的手机来说不过是个UPS罢了。</p><h2 id="操作方法"><a href="#操作方法" class="headerlink" title="操作方法"></a>操作方法</h2><p>大致上有两种思路供您选择：<br><a href="#%E6%96%B9%E6%B3%95%E4%B8%80-%E4%BF%AE%E6%94%B9%E7%94%B5%E6%B1%A0%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-%E5%A4%8D%E6%9D%82%E4%BC%98%E9%9B%85">复杂优雅</a><br><a href="#%E6%96%B9%E6%B3%95%E4%BA%8C-%E5%90%91%E5%86%85%E6%A0%B8%E8%8A%82%E7%82%B9%E4%BC%A0%E9%80%92%E6%95%B0%E6%8D%AE-%E7%AE%80%E5%8D%95%E7%B2%97%E6%9A%B4">简单粗暴</a></p><h3 id="方法一-修改电池配置文件-复杂优雅"><a href="#方法一-修改电池配置文件-复杂优雅" class="headerlink" title="方法一 修改电池配置文件 复杂优雅"></a>方法一 修改电池配置文件 复杂优雅</h3><h4 id="情况一"><a href="#情况一" class="headerlink" title="情况一"></a>情况一</h4><p>如果你的手机有单独的dtbo分区，那你可以对这个分区中的内容进行修改以达到目的。<br>首先你需要一个Linux环境，并获得mkdtimg和dtc这两个可执行文件。这两个是Android工具链中的文件，可以通用的，网上能找到编译好的（试了下挺难找的，我放个在这里吧，适用于Linux_X86，<a href="https://wwi.lanzouw.com/i29Ukzwuwji">下载</a>）。  </p><p>从 dtbo.img 中解出 dtb ：<br><code>mkdtimg dump dtbo.img -b &lt;filename&gt;  </code><br>把 dtb 文件转成 dts ：<br><code>dtc -I dtb -O dts &lt;dtb_filename&gt; -o &lt;dts_filename&gt;</code>  </p><p>以上是抄来的命令，原文在<a href="https://blog.csdn.net/qianxuedegushi/article/details/107224575">这个链接</a>。<br>因为里面可能有很多个dts文件，对应很多个设备，你可以写个循环执行的bash脚本来执行命令。</p><p>在里面找到对应你的设备的dts文件（找不到的话可以试试全改了），在其中找到<br>对应电池型号的电压一行，进行修改（16进制数值），<strong>注意检查数值</strong>噢，要是改炸了（物理）可不能怪我。<br>修改完成后，</p><p>把 dts 文件转成 dtb ：<br><code>dtc -O dtb -o &lt;dtb_filename&gt; &lt;dts_filename&gt;</code>  </p><p>把 dtb 合成 dtbo.img  ：<br><code>mkdtimg create new-dtbo.img --page_size=4096 dtb.0 dtb.1 dtb.2 ...   </code><br>此处要把所有dtb文件都填进去</p><h4 id="情况二"><a href="#情况二" class="headerlink" title="情况二"></a>情况二</h4><p>如果你的手机没单独的dtbo分区</p><p>尝试解压boot.img（可以试试用<a href="https://github.com/cfig/Android_boot_image_editor">这个工具</a>），看看里面有无dtbo&#x2F;dtb文件，然后按 <a href="#%E6%83%85%E5%86%B5%E4%B8%80">情况一</a> 修改。</p><p>如果解压不出dtbo或其类似物（比如小米6），则需要修改源码并<strong>从源码编译内核</strong>（或者你可以试试继续解包内核的zImage，反正这我不会了）。<br>修改的位置很容易找到，比如小米6的电池配置在内核源码的arch&#x2F;arm&#x2F;boot&#x2F;dts&#x2F;qcom&#x2F;xiaomi&#x2F;batterydata-sagit-atl-3350mAh.dtsi。<br>然后编译内核并刷入，是不是很简单（并不），太麻烦了这里就不展示了，之前在一台旧手机上实践过，电池再也没鼓包。</p><h3 id="方法二-向内核节点传递数据-简单粗暴"><a href="#方法二-向内核节点传递数据-简单粗暴" class="headerlink" title="方法二 向内核节点传递数据 简单粗暴"></a>方法二 向内核节点传递数据 简单粗暴</h3><p>每次开机后使用超级用户权限执行命令 </p><figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">chmod <span class="hljs-number">777</span> /sys/<span class="hljs-keyword">class</span>/<span class="hljs-symbol">power_supply</span>/*/*<br><span class="hljs-symbol">echo</span> &#x27;<span class="hljs-symbol">4280000</span>&#x27; &gt; /<span class="hljs-symbol">sys</span>/<span class="hljs-symbol">class</span>/<span class="hljs-symbol">power_supply</span>/<span class="hljs-symbol">battery</span>/<span class="hljs-symbol">voltage_max</span><br></code></pre></td></tr></table></figure><p>以上数值4280000代表4.28V,<strong>不同手机可能单位不一样，文件位置也不一样，需要先读取原有数值后参考修改</strong><br>可用<code>cat /sys/class/power_supply/battery/voltage_max</code>指令读取原有数值<br>建议在执行前sleep个60秒，防止系统启动过程中被覆盖。<br>我做了个Magisk模块来实现它。<a href="https://wwi.lanzouw.com/iekX4zwyhib">传送门</a><br>小米6亲测有效，电压被有效限制。</p><p><img src="/images/mi6battery.jpg"  width = 50% alt="小米6上测试"></p><h2 id="Q-A"><a href="#Q-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h2><p>Q：什么不用scene4中的充电限制功能<br>A：scene4中的充电限制是充电到一定程度后断开电源，由电池供电，电量下降到一定程度后再充电。而我不希望电池频繁充放电。</p><h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p>以上操作具有一定风险，请确认完全理解以上操作后在进行实践，若出现任何问题本人概不负责！祝您的手机健康长寿！</p>]]></content:encoded>
+      
+      
+      
+      
+      <comments>https://zhouym.tech/2022/Protect-battery-on-Android/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>用fail2ban屏蔽SSH爆破</title>
+      <link>https://zhouym.tech/2021/fail2ban/</link>
+      <guid>https://zhouym.tech/2021/fail2ban/</guid>
+      <pubDate>Wed, 01 Dec 2021 14:15:59 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h1 id=&quot;故事背景&quot;&gt;&lt;a href=&quot;#故事背景&quot; class=&quot;headerlink&quot;</description>
+          
+        
+      
+      
+      
+      <content:encoded><![CDATA[<h1 id="故事背景"><a href="#故事背景" class="headerlink" title="故事背景"></a>故事背景</h1><p>SSH爆破真是令人厌烦，动不动上万次的密码尝试属实难绷。<br>爆破密集到一定程度甚至有点浪费我宝贵的服务器带宽，并且有点担心我那并不算长的密码被试出来。<br>改端口和禁用密码验证是可行方案，但是会造成一定程度上的不便，本懒狗暂时不考虑。</p><p><img src="/images/SSH.png" width = "80%"  alt="老是有人爆破我SSH" /></p><h1 id="初步尝试"><a href="#初步尝试" class="headerlink" title="初步尝试"></a>初步尝试</h1><p>网上随便搜了搜教程，了解到可以用pam_tally2模块来防爆破。<br>配置好这个模块后才发现，该模块的行为是</p><blockquote><p>限制登录失败时可以锁定用户一段时间，就算密码输入正确也无法登录，等恢复之后才可以再次进入。</p></blockquote><p>也就是说，检测到多次密码失败后会锁定账户，然后我自己也登不上去了，不太符合云服务器的使用场景。</p><h1 id="使用fail2ban"><a href="#使用fail2ban" class="headerlink" title="使用fail2ban"></a>使用fail2ban</h1><p>随后搜到个叫<a href="https://github.com/fail2ban/fail2ban/wiki">fail2ban</a>的包，可以检测到多次密码尝试错误后封禁IP，很贴合需求。<br>我这里用的是CentOS 7.9，其他发行版可能在实际配置上有差异。</p><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p><code>yum install fail2ban</code></p><h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>根据文档建议，新建一个配置文件<br><code>vim /etc/fail2ban/jail.local</code></p><p>内容如下：  </p><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-section">[DEFAULT]</span><br><span class="hljs-comment"># time is in seconds. 3600 = 1 hour, 86400 = 24 hours (1 day)</span><br><span class="hljs-attr">findtime</span>    = <span class="hljs-number">1800</span><br><span class="hljs-attr">bantime</span>     = <span class="hljs-number">43200</span><br><span class="hljs-attr">maxretry</span>    = <span class="hljs-number">5</span><br><span class="hljs-attr">ignoreip</span>    = <span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span> <span class="hljs-number">127.0</span>.<span class="hljs-number">0.0</span>/<span class="hljs-number">8</span> <span class="hljs-number">10.0</span>.<span class="hljs-number">0.0</span>/<span class="hljs-number">8</span> <span class="hljs-number">172.16</span>.<span class="hljs-number">0.0</span>/<span class="hljs-number">12</span> <span class="hljs-number">192.168</span>.<span class="hljs-number">0.0</span>/<span class="hljs-number">16</span><br><br><span class="hljs-section">[sshd]</span><br><span class="hljs-attr">enabled</span> = <span class="hljs-literal">true</span><br></code></pre></td></tr></table></figure><p>可以根据需要修改数值。<br>按<code>Esc</code>后<code>：wq</code>保存，懂的都懂。</p><h2 id="应用并开启开机自启动"><a href="#应用并开启开机自启动" class="headerlink" title="应用并开启开机自启动"></a>应用并开启开机自启动</h2><figure class="highlight nsis"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs nsis"><span class="hljs-params">system</span>ctl enable fail2ban<br><span class="hljs-params">system</span>ctl restart fail2ban<br></code></pre></td></tr></table></figure><h2 id="查询阻挡状态"><a href="#查询阻挡状态" class="headerlink" title="查询阻挡状态"></a>查询阻挡状态</h2><figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs axapta">fail2ban-<span class="hljs-keyword">client</span> status<br>fail2ban-<span class="hljs-keyword">client</span> status sshd<br></code></pre></td></tr></table></figure><p><img src="/images/fail2ban_status.png" width = "80%"  alt="查看状态" /></p><h1 id="说点废话"><a href="#说点废话" class="headerlink" title="说点废话"></a>说点废话</h1><p>部署这个之后，用<code>lastb</code>查到的登陆失败日志大幅减少，再也不怕SSH爆破了。<br>看到有的文章中改了很多配置项，有点麻烦，实测只要配置<code>jail.local</code>中几行就能够正常工作了，</p><h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p><a href="https://www.jianshu.com/p/ba0f77a83a63">Centos7.4安装放暴力破解工具fail2ban</a></p>]]></content:encoded>
+      
+      
+      
+      
+      <comments>https://zhouym.tech/2021/fail2ban/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>使用Syncthing进行单向备份</title>
+      <link>https://zhouym.tech/2021/Syncthing/</link>
+      <guid>https://zhouym.tech/2021/Syncthing/</guid>
+      <pubDate>Mon, 08 Nov 2021 08:10:52 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h1 id=&quot;使用Syncthing将移动设备的文件单向备份到PC&quot;&gt;&lt;a href=&quot;#使用Syncthing将移动设备的文件单向备份到PC&quot; class=&quot;headerlink&quot;</description>
+          
+        
+      
+      
+      
+      <content:encoded><![CDATA[<h1 id="使用Syncthing将移动设备的文件单向备份到PC"><a href="#使用Syncthing将移动设备的文件单向备份到PC" class="headerlink" title="使用Syncthing将移动设备的文件单向备份到PC"></a>使用Syncthing将移动设备的文件单向备份到PC</h1><h2 id="故事背景及废话"><a href="#故事背景及废话" class="headerlink" title="故事背景及废话"></a>故事背景及废话</h2><p>&emsp;&emsp;<a href="#%E5%9B%BE%E7%A9%B7%E5%8C%95%E8%A7%81">跳过废话</a>  </p><p>&emsp;&emsp;最近，我这台才使用了半年的手机的存储空间已经仅剩41.5GB&#x2F;256.0GB了。与此同时，云服务空间仅剩6.6GB&#x2F;64.0GB。</p><p>&emsp;&emsp;我深知我手机里那庞大的空间占用是我完全懒得清理造成的，只要我哪天迫不得已去对冗余数据进行一次激情地清理就能解决。但是云服务空间的耗尽让我有点头疼。</p><p><img src="/images/CloudSpace.png"  width = 30% alt="云存储空间"></p><p>明明没拍啥照片就快把云存储占满了，这可不太对劲啊。没办法，现在面前只有两个选择：</p><ol><li>加钱升级套餐</li><li>删文件</li></ol><p>加钱是不可能加钱的！于是决定删掉一些占用过大的文件。</p><p>&emsp;&emsp;经过一番分析，发现有些谜之视频占用了不少空间。这些视频大多数是我瞎拍的或者二手交易中寄快递拆快递时用于保存证据的录像，没啥用但也不是很舍得删。又但是，云存储寸土寸金，还是别用来存这玩意儿了。</p><p><img src="/images/某知名导演.jpg" width=30% alt="某知名导演微博"></p><p>某日，机缘巧合下观某知名导演微博，受到启发，遂尝试整了这玩意儿。</p><h2 id="图穷匕见"><a href="#图穷匕见" class="headerlink" title="图穷匕见"></a>图穷匕见</h2><p>好，现在总结一下需求：</p><ol><li>将手机上的媒体单向备份到PC。</li><li>将手机上的视频文件删除时，PC端的视频文件不能受到影响。</li></ol><p>话不多说，开始配置！</p><h3 id="安装Syncthing"><a href="#安装Syncthing" class="headerlink" title="安装Syncthing"></a>安装Syncthing</h3><p>Syncthing是一款开源软件，适配了多个平台的客户端。<br>官网：<a href="https://syncthing.net/">https://syncthing.net/</a><br>项目地址：<a href="https://github.com/syncthing/syncthing">https://github.com/syncthing/syncthing</a></p><p>基本的安装及配置可以参考<a href="https://www.appinn.com/syncthing/">《Syncthing – 数据同步新选择，手把手教你做自己的网盘》</a></p><h3 id="建立连接"><a href="#建立连接" class="headerlink" title="建立连接"></a>建立连接</h3><p>在WindowsPC和Android手机上都安装好Syncthing后，扫码即可互相建立连接。<br>之后，添加需要同步的目录，并勾选上接受文件的设备。  </p><p><img src="/images/Android端配置.jpg"  width = 35% alt="手机端目录配置"></p><p>因为我<strong>不希望电脑端的文件变化影响手机端的文件</strong>，于是我将手机端设为了<strong>仅发送</strong>。</p><p><img src="/images/PC端设置.png"  width = 80% alt="PC端设置"></p><p>并且将PC端设置成了<strong>仅接收</strong>。</p><h3 id="安全删除手机上的文件"><a href="#安全删除手机上的文件" class="headerlink" title="安全删除手机上的文件"></a>安全删除手机上的文件</h3><p>按以上操作配置好之后，我们已经实现了手机端文件向PC的单向传输。但此时需要注意，若是<strong>手机上的文件被删除，PC上的文件也会同步被删除</strong>。<br>出于我为手机腾空间的需求，需要避免这种问题的发生。</p><h4 id="启用文件版本控制"><a href="#启用文件版本控制" class="headerlink" title="启用文件版本控制"></a>启用文件版本控制</h4><p>这是Syncthing的界面上摆在明显位置的功能。启用之后，在手机上的文件被删除时，PC端上的文件会被移入特别的垃圾箱。</p><p><img src="/images/版本控制.png"  width = 90% alt="使用版本控制"></p><h4 id="启用Ignore-Delete"><a href="#启用Ignore-Delete" class="headerlink" title="启用Ignore Delete"></a>启用Ignore Delete</h4><p>文件版本控制虽然能够让你的文件不被删除，但是还是太不优雅。越想越不对劲，Syncthing这看起来牛逼哄哄的软件咋可能没这功能呢？<br>经过我一番搜索，得知还有一些功能藏在高级设置里。</p><p>打开设置页右上角的操作-高级-文件夹，选择你需要配置的文件夹，找到<strong>Ignore Delete</strong>选项，将其勾选并保存。</p><p><img src="/images/Ignore Delete.png"  width = 90% alt="启用Ignore Delete"></p><p>官方对这个选项的解释：<a href="https://docs.syncthing.net/advanced/folder-ignoredelete.html#ignoredelete">IgnoreDelete</a></p><p>这样，在手机上删除文件时，就能保留PC上的文件了。</p><p>需要注意的是，这个选项只是忽略了删除命令，当文件被覆盖时，可能会引起旧文件的丢失。所以建议与版本控制一同使用，以防万一。</p><h2 id="再废话几句"><a href="#再废话几句" class="headerlink" title="再废话几句"></a>再废话几句</h2><p>数据无价，请谨慎操作。<br>配置完才搜到的这个文章，写得不错，要是能早点看到就不用自己摸索了：<br><a href="https://jaycechant.info/2016/backup-tips-about-syncthing/">用 Syncthing 备份的技巧</a></p>]]></content:encoded>
+      
+      
+      
+      
+      <comments>https://zhouym.tech/2021/Syncthing/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>LG G8 的 MIUI12 性能修复</title>
+      <link>https://zhouym.tech/2020/dex2oat-fix/</link>
+      <guid>https://zhouym.tech/2020/dex2oat-fix/</guid>
+      <pubDate>Sat, 12 Sep 2020 15:12:57 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h1 id=&quot;对-LG-G8-的-MIUI12-中的重大性能问题进行简易修复&quot;&gt;&lt;a href=&quot;#对-LG-G8-的-MIUI12-中的重大性能问题进行简易修复&quot;</description>
+          
+        
+      
+      
+      
+      <content:encoded><![CDATA[<h1 id="对-LG-G8-的-MIUI12-中的重大性能问题进行简易修复"><a href="#对-LG-G8-的-MIUI12-中的重大性能问题进行简易修复" class="headerlink" title="对 LG G8 的 MIUI12 中的重大性能问题进行简易修复"></a>对 LG G8 的 MIUI12 中的重大性能问题进行简易修复</h1><h2 id="废话"><a href="#废话" class="headerlink" title="废话"></a>废话</h2><p>细心的观众朋友们可能已经发现了，</p><p>LG G8 的 MIUI12 存在比较奇怪的性能问题。</p><p>主要体现在应用启动很慢，RAM 消耗大，12G RAM 也不够用，但是应用安装速度极快。</p><p>经过我多日研究，发现了问题所在：</p><p>该 MIUI12 ROM 包的 dex2oat 功能未能正常工作，安装应用时 dex2oat 过程报错并且被跳过。</p><p><a href="https://source.android.google.cn/devices/tech/dalvik#AOT_compilation">dex2oat</a> 的作用：</p><blockquote><p>Android Runtime (ART) 引入了预先编译机制，可提高应用的性能。<br>ART 使用设备自带的 dex2oat 工具来编译应用。</p></blockquote><p>向开发者反馈没有得到有效结果，所以我研究了一下发现了解决方案。</p><p>一般魔改 ROM 需要进行 deodex 操作避免冲突，但这个 MIUI12 ROM 并没有做。</p><p>真麻烦，还得自己动手。</p><h2 id="教程开始"><a href="#教程开始" class="headerlink" title="教程开始"></a>教程开始</h2><p>可以选择手动修改或者安装Magisk模块</p><h3 id="手动修改"><a href="#手动修改" class="headerlink" title="手动修改"></a>手动修改</h3><p>使用文件管理器，</p><p>进入&#x2F;system&#x2F;framework，</p><p>删除 arm, arm64, oat 三个文件夹，</p><p>并删除所有.vdex 格式的文件，</p><p>重启。</p> <!-- ![DeleteThese](/images/DeleteThese.jpg?57) --><p><img src="/images/DeleteThese.jpg" width = "40%" alt="DeleteThese"  /></p><!-- ![DeleteTheseToo](/images/DeleteTheseToo.jpg?) --><p><img src="/images/DeleteTheseToo.jpg" width = "40%"  alt="DeleteTheseToo" /></p><p><em>需要删除的文件示例</em></p><h3 id="使用-Magisk-模块"><a href="#使用-Magisk-模块" class="headerlink" title="使用 Magisk 模块"></a>使用 Magisk 模块</h3><p><a href="https://www.lanzoux.com/iRO36gkg0pc">下载地址</a></p><h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p><strong>重启时需要大约 10 分钟进行开机优化</strong></p><p><strong>不保证该操作绝对安全可靠，使用以上方案即视为同意承担可能出现的不良后果</strong></p><p><strong>请在掌握救砖方法且备份好重要数据后进行操作</strong></p><p><strong>仅修复LG G8的MIUI12的迷惑问题，对其他功能正常的ROM有负面影响，切勿乱用</strong></p><h2 id="效果展示"><a href="#效果展示" class="headerlink" title="效果展示"></a>效果展示</h2><p><img src="/images/RAM_Usage_compare.jpg"></p><p>应用启动速度快了不少呢！</p><p>骁龙855用起来又像是骁龙855了呢！</p><p>敏感肌也能用哦！</p>]]></content:encoded>
+      
+      
+      
+      
+      <comments>https://zhouym.tech/2020/dex2oat-fix/#disqus_thread</comments>
+      
+    </item>
+    
+    <item>
+      <title>本站成功建立啦</title>
+      <link>https://zhouym.tech/2020/what-happened/</link>
+      <guid>https://zhouym.tech/2020/what-happened/</guid>
+      <pubDate>Tue, 14 Apr 2020 06:57:36 GMT</pubDate>
+      
+        
+        
+          
+          
+      <description>&lt;h1 id=&quot;关于本站的建立&quot;&gt;&lt;a href=&quot;#关于本站的建立&quot; class=&quot;headerlink&quot; title=&quot;关于本站的建立&quot;&gt;&lt;/a&gt;关于本站的建立&lt;/h1&gt;&lt;p&gt; </description>
+          
+        
+      
+      
+      
+      <content:encoded><![CDATA[<h1 id="关于本站的建立"><a href="#关于本站的建立" class="headerlink" title="关于本站的建立"></a>关于本站的建立</h1><p>  &emsp;&emsp;zhouym建了个博客是怎么回事呢？zhouym相信大家都不熟悉，但是zhouym建了个博客是怎么回事呢，下面就让小编带大家一起了解吧。</p><p>  &emsp;&emsp;zhouym建了个博客，其实就是zhouym闲得慌，所以用Hexo在Github Pages建了个站，大家可能会很惊讶zhouym怎么会建了个博客呢？但事实就是这样，zhouym也感到非常惊讶。</p><p>  &emsp;&emsp;这就是关于zhouym建了个博客的事情了，大家有什么想法呢，欢迎在评论区告诉zhouym一起讨论哦！噢，评论系统还没建好，那没事了。</p>]]></content:encoded>
+      
+      
+      
+      
+      <comments>https://zhouym.tech/2020/what-happened/#disqus_thread</comments>
+      
+    </item>
+    
+  </channel>
+</rss>

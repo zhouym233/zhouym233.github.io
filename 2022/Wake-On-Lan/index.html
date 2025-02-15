@@ -16,8 +16,8 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#347bab">
-  <meta name="author" content="zhouym">
-  <meta name="keywords" content="zhouym,zhouym233,zhouyanmin">
+  <meta name="author" content="zhou">
+  <meta name="keywords" content="tech,fun,otaku,blog">
   
     <meta name="description" content="经典废话环节总之就是最近有了远程访问家里电脑的需求，但是也不是很频繁，让家里电脑一直开着有点不环保，所以来整个远程开机吧！ 实现思路最初的想法目前家中的网络架构比较简陋。当前使用的是千兆宽带，受限于弱电箱空间和弱电箱供电以及预埋线路质量等一系列原因，目前只放了一个电信光猫（Huawei HN8145V 10G-GPON）在弱电箱里，没有用上我心爱的OpenWRT，不然就一个插件轻松搞定了。  本来">
 <meta property="og:type" content="article">
@@ -36,8 +36,8 @@
 <meta property="og:image" content="https://zhouym.tech/images/%E5%8F%91%E5%8C%85%E6%88%90%E5%8A%9F.jpg">
 <meta property="article:published_time" content="2022-08-13T10:19:02.000Z">
 <meta property="article:modified_time" content="2022-08-14T04:04:39.510Z">
-<meta property="article:author" content="zhouym">
-<meta property="article:tag" content="zhouym,zhouym233,zhouyanmin">
+<meta property="article:author" content="zhou">
+<meta property="article:tag" content="tech,fun,otaku,blog">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://zhouym.tech/images/Linux%E5%B1%9E%E6%80%A71.jpg">
   
@@ -107,7 +107,9 @@
 
 
   
-<meta name="generator" content="Hexo 7.3.0"></head>
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="我只会摸鱼" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="我只会摸鱼" type="application/rss+xml">
+</head>
 
 
 <body>
@@ -233,7 +235,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.2k 字
+          1.3k 字
         
       </span>
     
@@ -244,7 +246,7 @@
         
         
         
-          19 分钟
+          11 分钟
         
       </span>
     
@@ -304,44 +306,32 @@
 <h2 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h2><h3 id="事前准备"><a href="#事前准备" class="headerlink" title="事前准备"></a>事前准备</h3><p>首先你需要一台拥有Root权限的Android机器，并保持常供电。如果担心常供电下电池怀孕，可以参考<a href="https://zhouym.tech/2022/Protect-battery-on-Android/">我之前的文章</a>。<br>确认你拥有2开头的公网IPv6地址且网络可用，并且有权限在防火墙上放行端口或关闭IPv6防火墙，例如我使用超级管理员账户关掉了光猫的IPv6防火墙（这玩意儿似乎不能指定放行单个端口）。</p>
 <h3 id="安装并设置Linux-Deploy"><a href="#安装并设置Linux-Deploy" class="headerlink" title="安装并设置Linux Deploy"></a>安装并设置<a target="_blank" rel="noopener" href="https://github.com/meefik/linuxdeploy">Linux Deploy</a></h3><p>下载<a target="_blank" rel="noopener" href="https://github.com/meefik/linuxdeploy">Linux Deploy</a>并安装打开。<br>在右下角的设置里：</p>
 <ol>
-<li><p>选择你想要安装的Linux发行版，这里我出于使用习惯考虑安装了Ubuntu。</p>
-</li>
-<li><p>为了提高国内访问速度，源地址相应改成<br><code>https://mirrors.ustc.edu.cn/ubuntu-ports/</code><br>架构一般选择 arm64/aarch64，除非你的手机是32位古董或者其他神奇架构。</p>
-</li>
-<li><p>设置一下用户密码</p>
-  <p>
-  <img src="/images/Linux属性1.jpg" srcset="/img/loading.gif" lazyload  width = 50% alt="Linux属性设置">
-  </p></li>
-<li><p>启用初始化系统和SSH选项，方便相应服务开机自启和远程终端控制。  </p>
-  <p>
-  <img src="/images/Linux属性2.jpg" srcset="/img/loading.gif" lazyload  width = 50% alt="Linux属性设置2">
-  </p></li>
-<li><p>其他不需要动，我也没弄懂</p>
-</li>
-<li><p>返回上一层，在左上角的菜单中打开设置，启用CPU唤醒和开机自启动，确保服务的可用。</p>
-</li>
-<li><p>返回上一层，在右上角的三个点菜单里选择安装，并等待安装完成。</p>
-</li>
-<li><p>安装完成后，点击下方按钮启动容器。</p>
-</li>
+<li>选择你想要安装的Linux发行版，这里我出于使用习惯考虑安装了Ubuntu。</li>
+<li>为了提高国内访问速度，源地址相应改成</li>
+</ol>
+<p><code>https://mirrors.ustc.edu.cn/ubuntu-ports/</code><br>架构一般选择 arm64&#x2F;aarch64，除非你的手机是32位古董或者其他神奇架构。<br>   3. 设置一下用户密码<br>        <p><br>        <img src="/images/Linux属性1.jpg" srcset="/img/loading.gif" lazyload  width = 50% alt="Linux属性设置"><br>        </p><br>   4. 启用初始化系统和SSH选项，方便相应服务开机自启和远程终端控制。<br>        <p><br>        <img src="/images/Linux属性2.jpg" srcset="/img/loading.gif" lazyload  width = 50% alt="Linux属性设置2"><br>        </p><br>   5. 其他不需要动，我也没弄懂</p>
+<ol start="6">
+<li>返回上一层，在左上角的菜单中打开设置，启用CPU唤醒和开机自启动，确保服务的可用。</li>
+<li>返回上一层，在右上角的三个点菜单里选择安装，并等待安装完成。</li>
+<li>安装完成后，点击下方按钮启动容器。</li>
 </ol>
 <h3 id="SSH连接到Ubuntu"><a href="#SSH连接到Ubuntu" class="headerlink" title="SSH连接到Ubuntu"></a>SSH连接到Ubuntu</h3><p>使用其他设备或其他终端程序，通过SSH连接到Ubuntu。例如Xshell。<br>将默认终端改为<code>/bin/bash</code>，不然按个退格都费劲。默认的<code>/bin/sh</code>需要按着Ctrl才能退格。<br>    <figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk">chsh<br><span class="hljs-regexp">/bin/</span>bash<br></code></pre></td></tr></table></figure><br>    安装nano作为默认编辑器，也是因为vi难退格<br>    <code>sudo apt install nano</code><br>    安装wget<br>    <code>sudo apt install wget</code></p>
-<h3 id="安装ddns-go"><a href="#安装ddns-go" class="headerlink" title="安装ddns-go"></a>安装ddns-go</h3><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">wget</span> https://github.com/jeessy<span class="hljs-number">2</span>/ddns-go/releases/download/v<span class="hljs-number">4</span>.<span class="hljs-number">0</span>.<span class="hljs-number">4</span>/ddns-go_<span class="hljs-number">4</span>.<span class="hljs-number">0</span>.<span class="hljs-number">4</span>_Linux_arm<span class="hljs-number">64</span>.tar.gz<br><span class="hljs-attribute">tar</span> -xzvf ddns-go_<span class="hljs-number">4</span>.<span class="hljs-number">0</span>.<span class="hljs-number">4</span>_Linux_arm<span class="hljs-number">64</span>.tar.gz<br></code></pre></td></tr></table></figure>
-<p>赋予运行权限<br><code>chmod +x ddns-go</code><br>运行一下试试<br><code>./ddns-go</code><br>打开 http://手机IP地址:9876/ ,即可进入配置界面，懂得都懂，懒得写了，自己看<a target="_blank" rel="noopener" href="https://github.com/jeessy2/ddns-go#readme">ddns-go的文档</a>吧，记得勾选ipv6就行。</p>
+<h3 id="安装ddns-go"><a href="#安装ddns-go" class="headerlink" title="安装ddns-go"></a>安装ddns-go</h3><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">wget</span> https://github.com/jeessy2/ddns-go/releases/download/v4.<span class="hljs-number">0</span>.<span class="hljs-number">4</span>/ddns-go_4.<span class="hljs-number">0</span>.<span class="hljs-number">4</span>_Linux_arm64.tar.gz<br><span class="hljs-attribute">tar</span> -xzvf ddns-go_4.<span class="hljs-number">0</span>.<span class="hljs-number">4</span>_Linux_arm64.tar.gz<br></code></pre></td></tr></table></figure>
+<p>赋予运行权限<br><code>chmod +x ddns-go</code><br>运行一下试试<br><code>./ddns-go</code><br>打开 http:&#x2F;&#x2F;手机IP地址:9876&#x2F; ,即可进入配置界面，懂得都懂，懒得写了，自己看<a target="_blank" rel="noopener" href="https://github.com/jeessy2/ddns-go#readme">ddns-go的文档</a>吧，记得勾选ipv6就行。</p>
 <p>
     <img src="/images/ddns-go.png" srcset="/img/loading.gif" lazyload  width = 50% alt="ddns-go">
 </p>
 
-
-
-<h3 id="安装WolGoWeb"><a href="#安装WolGoWeb" class="headerlink" title="安装WolGoWeb"></a>安装WolGoWeb</h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">wget https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/xiaoxinpro/</span>WolGoWeb<span class="hljs-regexp">/releases/</span>download<span class="hljs-regexp">/V0.0.4/</span>WolGoWeb_0.<span class="hljs-number">0.4</span>_linux_arm64<br></code></pre></td></tr></table></figure>
+  
+    
+<h3 id="安装WolGoWeb"><a href="#安装WolGoWeb" class="headerlink" title="安装WolGoWeb"></a>安装WolGoWeb</h3><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">wget</span> https://github.com/xiaoxinpro/WolGoWeb/releases/download/V0.<span class="hljs-number">0</span>.<span class="hljs-number">4</span>/WolGoWeb_0.<span class="hljs-number">0</span>.<span class="hljs-number">4</span>_linux_arm64<br></code></pre></td></tr></table></figure>
 <p>可能有更新的版本，不妨先去Release页看看<br>改个文件名，不然好长一串<br><code>mv WolGoWeb_0.0.4_linux_arm64 wolgoweb</code><br>赋予运行权限<br><code>chmod +x wolgoweb</code><br>运行一下试试<br><code>./wolgoweb</code><br>可以自己先在内网试试好不好使，默认端口9090。<br>打开 <code>http://手机DDNS域名或IP地址:9090/</code> 就能看到提示页</p>
 <p>
         <img src="/images/WolGoWeb.png" srcset="/img/loading.gif" lazyload  width = 50% alt="WolGoWeb">
 </p>
 用法是这样，浏览器访问
 
-<p>http://你的域名或IP地址:9090/wol?mac=00-00-00-00-00-00 （改成你的电脑网卡MAC地址）  </p>
+<p>http:&#x2F;&#x2F;你的域名或IP地址:9090&#x2F;wol?mac&#x3D;00-00-00-00-00-00 （改成你的电脑网卡MAC地址）  </p>
 <p>像这样就是成功发出唤醒魔术包了。</p>
 <p>
     <img src="/images/唤醒.png" srcset="/img/loading.gif" lazyload  width = 50% alt="成功发包">
@@ -350,7 +340,7 @@
 记得把网络唤醒/PCIE唤醒等设置打开，不会的自己搜搜吧。
 
 <h3 id="设置自启动"><a href="#设置自启动" class="headerlink" title="设置自启动"></a>设置自启动</h3><p>因为LinuxDeploy下不能使用systemctl，只能使用其他的初始化方法。记得在Linux属性里启用初始化系统（第3步）。<br><code>sudo nano /etc/rc.local</code><br>添加内容</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/sh</span><br><span class="hljs-comment">#</span><br>nohup /home/android/ddns-go &amp;<br>nohup /home/android/wolgoweb &amp;<br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/sh</span><br><span class="hljs-comment">#</span><br><span class="hljs-built_in">nohup</span> /home/android/ddns-go &amp;<br><span class="hljs-built_in">nohup</span> /home/android/wolgoweb &amp;<br></code></pre></td></tr></table></figure>
 <p>如果你的目录不一样，那自己改吧。<br><code>Ctrl+s</code>保存，<code>Ctrl+x</code>退出<br>加权限<br><code>chmod +x /etc/rc.local</code><br>在手机上重启一下Ubuntu，试试有没有自启动。</p>
 <h3 id="安装手机客户端"><a href="#安装手机客户端" class="headerlink" title="安装手机客户端"></a>安装手机客户端</h3><p>这里用的是<a target="_blank" rel="noopener" href="https://gitee.com/itrycn/MyEasyWOL">MyEasyWOL</a>的客户端，其他的wol应用不知道行不行，懒得试了。<br>添加服务器信息：</p>
 <p>
@@ -393,7 +383,7 @@
       
         <div class="license-meta-item">
           <div>作者</div>
-          <div>zhouym</div>
+          <div>zhou</div>
         </div>
       
       

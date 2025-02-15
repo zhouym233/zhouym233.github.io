@@ -16,8 +16,8 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#347bab">
-  <meta name="author" content="zhouym">
-  <meta name="keywords" content="zhouym,zhouym233,zhouyanmin">
+  <meta name="author" content="zhou">
+  <meta name="keywords" content="tech,fun,otaku,blog">
   
     <meta name="description" content="故事背景SSH爆破真是令人厌烦，动不动上万次的密码尝试属实难绷。爆破密集到一定程度甚至有点浪费我宝贵的服务器带宽，并且有点担心我那并不算长的密码被试出来。改端口和禁用密码验证是可行方案，但是会造成一定程度上的不便，本懒狗暂时不考虑。   初步尝试网上随便搜了搜教程，了解到可以用pam_tally2模块来防爆破。配置好这个模块后才发现，该模块的行为是  限制登录失败时可以锁定用户一段时间，就算密码输">
 <meta property="og:type" content="article">
@@ -30,8 +30,8 @@
 <meta property="og:image" content="https://zhouym.tech/images/fail2ban_status.png">
 <meta property="article:published_time" content="2021-12-01T14:15:59.000Z">
 <meta property="article:modified_time" content="2021-12-09T16:24:20.742Z">
-<meta property="article:author" content="zhouym">
-<meta property="article:tag" content="zhouym,zhouym233,zhouyanmin">
+<meta property="article:author" content="zhou">
+<meta property="article:tag" content="tech,fun,otaku,blog">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://zhouym.tech/images/SSH.png">
   
@@ -101,7 +101,9 @@
 
 
   
-<meta name="generator" content="Hexo 7.3.0"></head>
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="我只会摸鱼" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="我只会摸鱼" type="application/rss+xml">
+</head>
 
 
 <body>
@@ -227,7 +229,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          863 字
+          480 字
         
       </span>
     
@@ -238,7 +240,7 @@
         
         
         
-          8 分钟
+          5 分钟
         
       </span>
     
@@ -301,9 +303,9 @@
 <h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p><code>yum install fail2ban</code></p>
 <h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>根据文档建议，新建一个配置文件<br><code>vim /etc/fail2ban/jail.local</code></p>
 <p>内容如下：  </p>
-<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">[DEFAULT]<br># time <span class="hljs-keyword">is</span> <span class="hljs-keyword">in</span> seconds. <span class="hljs-number">3600</span> = <span class="hljs-number">1</span> hour, <span class="hljs-number">86400</span> = <span class="hljs-number">24</span> hours (<span class="hljs-number">1</span> day)<br>findtime    = <span class="hljs-number">1800</span><br>bantime     = <span class="hljs-number">43200</span><br>maxretry    = <span class="hljs-number">5</span><br>ignoreip    = <span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span> <span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span>/<span class="hljs-number">8</span> <span class="hljs-number">10.0</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span>/<span class="hljs-number">8</span> <span class="hljs-number">172.16</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span>/<span class="hljs-number">12</span> <span class="hljs-number">192.168</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span>/<span class="hljs-number">16</span><br><br>[sshd]<br>enabled = <span class="hljs-literal">true</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-section">[DEFAULT]</span><br><span class="hljs-comment"># time is in seconds. 3600 = 1 hour, 86400 = 24 hours (1 day)</span><br><span class="hljs-attr">findtime</span>    = <span class="hljs-number">1800</span><br><span class="hljs-attr">bantime</span>     = <span class="hljs-number">43200</span><br><span class="hljs-attr">maxretry</span>    = <span class="hljs-number">5</span><br><span class="hljs-attr">ignoreip</span>    = <span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span> <span class="hljs-number">127.0</span>.<span class="hljs-number">0.0</span>/<span class="hljs-number">8</span> <span class="hljs-number">10.0</span>.<span class="hljs-number">0.0</span>/<span class="hljs-number">8</span> <span class="hljs-number">172.16</span>.<span class="hljs-number">0.0</span>/<span class="hljs-number">12</span> <span class="hljs-number">192.168</span>.<span class="hljs-number">0.0</span>/<span class="hljs-number">16</span><br><br><span class="hljs-section">[sshd]</span><br><span class="hljs-attr">enabled</span> = <span class="hljs-literal">true</span><br></code></pre></td></tr></table></figure>
 <p>可以根据需要修改数值。<br>按<code>Esc</code>后<code>：wq</code>保存，懂的都懂。</p>
-<h2 id="应用并开启开机自启动"><a href="#应用并开启开机自启动" class="headerlink" title="应用并开启开机自启动"></a>应用并开启开机自启动</h2><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">systemctl</span> enable fail<span class="hljs-number">2</span>ban<br><span class="hljs-attribute">systemctl</span> restart fail<span class="hljs-number">2</span>ban<br></code></pre></td></tr></table></figure>
+<h2 id="应用并开启开机自启动"><a href="#应用并开启开机自启动" class="headerlink" title="应用并开启开机自启动"></a>应用并开启开机自启动</h2><figure class="highlight nsis"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs nsis"><span class="hljs-params">system</span>ctl enable fail2ban<br><span class="hljs-params">system</span>ctl restart fail2ban<br></code></pre></td></tr></table></figure>
 <h2 id="查询阻挡状态"><a href="#查询阻挡状态" class="headerlink" title="查询阻挡状态"></a>查询阻挡状态</h2><figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs axapta">fail2ban-<span class="hljs-keyword">client</span> status<br>fail2ban-<span class="hljs-keyword">client</span> status sshd<br></code></pre></td></tr></table></figure>
 <p><img src="/images/fail2ban_status.png" srcset="/img/loading.gif" lazyload width = "80%"  alt="查看状态" /></p>
 
@@ -333,7 +335,7 @@
       
         <div class="license-meta-item">
           <div>作者</div>
-          <div>zhouym</div>
+          <div>zhou</div>
         </div>
       
       

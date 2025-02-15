@@ -16,8 +16,8 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#347bab">
-  <meta name="author" content="zhouym">
-  <meta name="keywords" content="zhouym,zhouym233,zhouyanmin">
+  <meta name="author" content="zhou">
+  <meta name="keywords" content="tech,fun,otaku,blog">
   
     <meta name="description" content="这又是什么需求众所周知，锂电池在长时间保持高电量的情况下容易鼓包。我本以为一代更比一代强的电源管理系统会解决这个问题，但是并不一定可靠。我放在房间里挂机的小米6就这么鼓包了，虽然也可能和温度有点关系。于是我决定换块电池，并且降低充电截至电压以避免电量过高，从而延长寿命。反正电池对长期插电的手机来说不过是个UPS罢了。 操作方法大致上有两种思路供您选择：复杂优雅简单粗暴 方法一 修改电池配置文件 复">
 <meta property="og:type" content="article">
@@ -29,8 +29,8 @@
 <meta property="og:image" content="https://zhouym.tech/images/mi6battery.jpg">
 <meta property="article:published_time" content="2022-02-11T08:40:42.000Z">
 <meta property="article:modified_time" content="2022-02-11T10:36:47.534Z">
-<meta property="article:author" content="zhouym">
-<meta property="article:tag" content="zhouym,zhouym233,zhouyanmin">
+<meta property="article:author" content="zhou">
+<meta property="article:tag" content="tech,fun,otaku,blog">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://zhouym.tech/images/mi6battery.jpg">
   
@@ -100,7 +100,9 @@
 
 
   
-<meta name="generator" content="Hexo 7.3.0"></head>
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="我只会摸鱼" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="我只会摸鱼" type="application/rss+xml">
+</head>
 
 
 <body>
@@ -226,7 +228,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.5k 字
+          952 字
         
       </span>
     
@@ -237,7 +239,7 @@
         
         
         
-          13 分钟
+          8 分钟
         
       </span>
     
@@ -297,8 +299,8 @@
 <p>把 dts 文件转成 dtb ：<br><code>dtc -O dtb -o &lt;dtb_filename&gt; &lt;dts_filename&gt;</code>  </p>
 <p>把 dtb 合成 dtbo.img  ：<br><code>mkdtimg create new-dtbo.img --page_size=4096 dtb.0 dtb.1 dtb.2 ...   </code><br>此处要把所有dtb文件都填进去</p>
 <h4 id="情况二"><a href="#情况二" class="headerlink" title="情况二"></a>情况二</h4><p>如果你的手机没单独的dtbo分区</p>
-<p>尝试解压boot.img（可以试试用<a target="_blank" rel="noopener" href="https://github.com/cfig/Android_boot_image_editor">这个工具</a>），看看里面有无dtbo/dtb文件，然后按 <a href="#%E6%83%85%E5%86%B5%E4%B8%80">情况一</a> 修改。</p>
-<p>如果解压不出dtbo或其类似物（比如小米6），则需要修改源码并<strong>从源码编译内核</strong>（或者你可以试试继续解包内核的zImage，反正这我不会了）。<br>修改的位置很容易找到，比如小米6的电池配置在内核源码的arch/arm/boot/dts/qcom/xiaomi/batterydata-sagit-atl-3350mAh.dtsi。<br>然后编译内核并刷入，是不是很简单（并不），太麻烦了这里就不展示了，之前在一台旧手机上实践过，电池再也没鼓包。</p>
+<p>尝试解压boot.img（可以试试用<a target="_blank" rel="noopener" href="https://github.com/cfig/Android_boot_image_editor">这个工具</a>），看看里面有无dtbo&#x2F;dtb文件，然后按 <a href="#%E6%83%85%E5%86%B5%E4%B8%80">情况一</a> 修改。</p>
+<p>如果解压不出dtbo或其类似物（比如小米6），则需要修改源码并<strong>从源码编译内核</strong>（或者你可以试试继续解包内核的zImage，反正这我不会了）。<br>修改的位置很容易找到，比如小米6的电池配置在内核源码的arch&#x2F;arm&#x2F;boot&#x2F;dts&#x2F;qcom&#x2F;xiaomi&#x2F;batterydata-sagit-atl-3350mAh.dtsi。<br>然后编译内核并刷入，是不是很简单（并不），太麻烦了这里就不展示了，之前在一台旧手机上实践过，电池再也没鼓包。</p>
 <h3 id="方法二-向内核节点传递数据-简单粗暴"><a href="#方法二-向内核节点传递数据-简单粗暴" class="headerlink" title="方法二 向内核节点传递数据 简单粗暴"></a>方法二 向内核节点传递数据 简单粗暴</h3><p>每次开机后使用超级用户权限执行命令 </p>
 <figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">chmod <span class="hljs-number">777</span> /sys/<span class="hljs-keyword">class</span>/<span class="hljs-symbol">power_supply</span>/*/*<br><span class="hljs-symbol">echo</span> &#x27;<span class="hljs-symbol">4280000</span>&#x27; &gt; /<span class="hljs-symbol">sys</span>/<span class="hljs-symbol">class</span>/<span class="hljs-symbol">power_supply</span>/<span class="hljs-symbol">battery</span>/<span class="hljs-symbol">voltage_max</span><br></code></pre></td></tr></table></figure>
 <p>以上数值4280000代表4.28V,<strong>不同手机可能单位不一样，文件位置也不一样，需要先读取原有数值后参考修改</strong><br>可用<code>cat /sys/class/power_supply/battery/voltage_max</code>指令读取原有数值<br>建议在执行前sleep个60秒，防止系统启动过程中被覆盖。<br>我做了个Magisk模块来实现它。<a target="_blank" rel="noopener" href="https://wwi.lanzouw.com/iekX4zwyhib">传送门</a><br>小米6亲测有效，电压被有效限制。</p>
@@ -306,7 +308,7 @@
 <img src="/images/mi6battery.jpg" srcset="/img/loading.gif" lazyload  width = 50% alt="小米6上测试">
 </p>
 
-<h2 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h2><p>Q：什么不用scene4中的充电限制功能<br>A：scene4中的充电限制是充电到一定程度后断开电源，由电池供电，电量下降到一定程度后再充电。而我不希望电池频繁充放电。</p>
+<h2 id="Q-A"><a href="#Q-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h2><p>Q：什么不用scene4中的充电限制功能<br>A：scene4中的充电限制是充电到一定程度后断开电源，由电池供电，电量下降到一定程度后再充电。而我不希望电池频繁充放电。</p>
 <h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p>以上操作具有一定风险，请确认完全理解以上操作后在进行实践，若出现任何问题本人概不负责！祝您的手机健康长寿！</p>
 
                 
@@ -332,7 +334,7 @@
       
         <div class="license-meta-item">
           <div>作者</div>
-          <div>zhouym</div>
+          <div>zhou</div>
         </div>
       
       
