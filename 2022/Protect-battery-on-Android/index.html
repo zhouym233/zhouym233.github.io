@@ -19,16 +19,16 @@
   <meta name="author" content="zhou">
   <meta name="keywords" content="tech,fun,otaku,blog">
   
-    <meta name="description" content="这又是什么需求众所周知，锂电池在长时间保持高电量的情况下容易鼓包。我本以为一代更比一代强的电源管理系统会解决这个问题，但是并不一定可靠。我放在房间里挂机的小米6就这么鼓包了，虽然也可能和温度有点关系。于是我决定换块电池，并且降低充电截至电压以避免电量过高，从而延长寿命。反正电池对长期插电的手机来说不过是个UPS罢了。 操作方法大致上有两种思路供您选择：复杂优雅简单粗暴 方法一 修改电池配置文件 复">
+    <meta name="description" content="避免旧手机长时间通电引发电池鼓包鼓包...">
 <meta property="og:type" content="article">
 <meta property="og:title" content="降低Android设备的充电电压">
 <meta property="og:url" content="https://zhouym.tech/2022/Protect-battery-on-Android/index.html">
 <meta property="og:site_name" content="我只会摸鱼">
-<meta property="og:description" content="这又是什么需求众所周知，锂电池在长时间保持高电量的情况下容易鼓包。我本以为一代更比一代强的电源管理系统会解决这个问题，但是并不一定可靠。我放在房间里挂机的小米6就这么鼓包了，虽然也可能和温度有点关系。于是我决定换块电池，并且降低充电截至电压以避免电量过高，从而延长寿命。反正电池对长期插电的手机来说不过是个UPS罢了。 操作方法大致上有两种思路供您选择：复杂优雅简单粗暴 方法一 修改电池配置文件 复">
+<meta property="og:description" content="避免旧手机长时间通电引发电池鼓包鼓包...">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zhouym.tech/images/mi6battery.jpg">
 <meta property="article:published_time" content="2022-02-11T08:40:42.000Z">
-<meta property="article:modified_time" content="2022-02-11T10:36:47.534Z">
+<meta property="article:modified_time" content="2025-02-15T10:04:20.590Z">
 <meta property="article:author" content="zhou">
 <meta property="article:tag" content="tech,fun,otaku,blog">
 <meta name="twitter:card" content="summary_large_image">
@@ -228,7 +228,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          952 字
+          981 字
         
       </span>
     
@@ -239,7 +239,7 @@
         
         
         
-          8 分钟
+          9 分钟
         
       </span>
     
@@ -291,6 +291,7 @@
               <div class="markdown-body">
                 
                 <h2 id="这又是什么需求"><a href="#这又是什么需求" class="headerlink" title="这又是什么需求"></a>这又是什么需求</h2><p>众所周知，锂电池在长时间保持高电量的情况下容易鼓包。我本以为一代更比一代强的电源管理系统会解决这个问题，但是并不一定可靠。我放在房间里挂机的小米6就这么鼓包了，虽然也可能和温度有点关系。于是我决定换块电池，并且降低充电截至电压以避免电量过高，从而延长寿命。反正电池对长期插电的手机来说不过是个UPS罢了。</p>
+<h2 id="来自2025年的提示"><a href="#来自2025年的提示" class="headerlink" title="来自2025年的提示"></a>来自2025年的提示</h2><p>试试更简单的新方案吧，只需要root权限即可 <a target="_blank" rel="noopener" href="https://github.com/MatteCarra/AccA">https://github.com/MatteCarra/AccA</a></p>
 <h2 id="操作方法"><a href="#操作方法" class="headerlink" title="操作方法"></a>操作方法</h2><p>大致上有两种思路供您选择：<br><a href="#%E6%96%B9%E6%B3%95%E4%B8%80-%E4%BF%AE%E6%94%B9%E7%94%B5%E6%B1%A0%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-%E5%A4%8D%E6%9D%82%E4%BC%98%E9%9B%85">复杂优雅</a><br><a href="#%E6%96%B9%E6%B3%95%E4%BA%8C-%E5%90%91%E5%86%85%E6%A0%B8%E8%8A%82%E7%82%B9%E4%BC%A0%E9%80%92%E6%95%B0%E6%8D%AE-%E7%AE%80%E5%8D%95%E7%B2%97%E6%9A%B4">简单粗暴</a></p>
 <h3 id="方法一-修改电池配置文件-复杂优雅"><a href="#方法一-修改电池配置文件-复杂优雅" class="headerlink" title="方法一 修改电池配置文件 复杂优雅"></a>方法一 修改电池配置文件 复杂优雅</h3><h4 id="情况一"><a href="#情况一" class="headerlink" title="情况一"></a>情况一</h4><p>如果你的手机有单独的dtbo分区，那你可以对这个分区中的内容进行修改以达到目的。<br>首先你需要一个Linux环境，并获得mkdtimg和dtc这两个可执行文件。这两个是Android工具链中的文件，可以通用的，网上能找到编译好的（试了下挺难找的，我放个在这里吧，适用于Linux_X86，<a target="_blank" rel="noopener" href="https://wwi.lanzouw.com/i29Ukzwuwji">下载</a>）。  </p>
 <p>从 dtbo.img 中解出 dtb ：<br><code>mkdtimg dump dtbo.img -b &lt;filename&gt;  </code><br>把 dtb 文件转成 dts ：<br><code>dtc -I dtb -O dts &lt;dtb_filename&gt; -o &lt;dts_filename&gt;</code>  </p>

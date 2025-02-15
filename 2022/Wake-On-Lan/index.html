@@ -19,12 +19,12 @@
   <meta name="author" content="zhou">
   <meta name="keywords" content="tech,fun,otaku,blog">
   
-    <meta name="description" content="经典废话环节总之就是最近有了远程访问家里电脑的需求，但是也不是很频繁，让家里电脑一直开着有点不环保，所以来整个远程开机吧！ 实现思路最初的想法目前家中的网络架构比较简陋。当前使用的是千兆宽带，受限于弱电箱空间和弱电箱供电以及预埋线路质量等一系列原因，目前只放了一个电信光猫（Huawei HN8145V 10G-GPON）在弱电箱里，没有用上我心爱的OpenWRT，不然就一个插件轻松搞定了。  本来">
+    <meta name="description" content="在只有1台运营商光猫和1台旧手机还没有公网ipv4地址的情况下部署wol服务">
 <meta property="og:type" content="article">
 <meta property="og:title" content="通过IPV6实现远程开机">
 <meta property="og:url" content="https://zhouym.tech/2022/Wake-On-Lan/index.html">
 <meta property="og:site_name" content="我只会摸鱼">
-<meta property="og:description" content="经典废话环节总之就是最近有了远程访问家里电脑的需求，但是也不是很频繁，让家里电脑一直开着有点不环保，所以来整个远程开机吧！ 实现思路最初的想法目前家中的网络架构比较简陋。当前使用的是千兆宽带，受限于弱电箱空间和弱电箱供电以及预埋线路质量等一系列原因，目前只放了一个电信光猫（Huawei HN8145V 10G-GPON）在弱电箱里，没有用上我心爱的OpenWRT，不然就一个插件轻松搞定了。  本来">
+<meta property="og:description" content="在只有1台运营商光猫和1台旧手机还没有公网ipv4地址的情况下部署wol服务">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zhouym.tech/images/Linux%E5%B1%9E%E6%80%A71.jpg">
 <meta property="og:image" content="https://zhouym.tech/images/Linux%E5%B1%9E%E6%80%A72.jpg">
@@ -35,7 +35,7 @@
 <meta property="og:image" content="https://zhouym.tech/images/ddns%E5%AE%A2%E6%88%B7%E7%AB%AF-%E5%94%A4%E9%86%92%E7%9B%AE%E6%A0%87%E8%AE%BE%E7%BD%AE.jpg">
 <meta property="og:image" content="https://zhouym.tech/images/%E5%8F%91%E5%8C%85%E6%88%90%E5%8A%9F.jpg">
 <meta property="article:published_time" content="2022-08-13T10:19:02.000Z">
-<meta property="article:modified_time" content="2022-08-14T04:04:39.510Z">
+<meta property="article:modified_time" content="2025-02-15T10:08:50.027Z">
 <meta property="article:author" content="zhou">
 <meta property="article:tag" content="tech,fun,otaku,blog">
 <meta name="twitter:card" content="summary_large_image">
@@ -235,7 +235,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.3k 字
+          1.4k 字
         
       </span>
     
@@ -246,7 +246,7 @@
         
         
         
-          11 分钟
+          12 分钟
         
       </span>
     
@@ -298,6 +298,7 @@
               <div class="markdown-body">
                 
                 <h2 id="经典废话环节"><a href="#经典废话环节" class="headerlink" title="经典废话环节"></a>经典废话环节</h2><p>总之就是最近有了远程访问家里电脑的需求，但是也不是很频繁，让家里电脑一直开着有点不环保，所以来整个远程开机吧！</p>
+<h2 id="来自2025年的温馨提示"><a href="#来自2025年的温馨提示" class="headerlink" title="来自2025年的温馨提示"></a>来自2025年的温馨提示</h2><p>本文方案在2025年看来还是比较抽象的，只适合家里没有其他设备能作为wol中继的用户使用。我在大幅升级家庭网络后已经切换为OpenWrt上部署相关服务。</p>
 <h2 id="实现思路"><a href="#实现思路" class="headerlink" title="实现思路"></a>实现思路</h2><h3 id="最初的想法"><a href="#最初的想法" class="headerlink" title="最初的想法"></a>最初的想法</h3><p>目前家中的网络架构比较简陋。当前使用的是千兆宽带，受限于弱电箱空间和弱电箱供电以及预埋线路质量等一系列原因，目前只放了一个电信光猫（Huawei HN8145V 10G-GPON）在弱电箱里，没有用上我心爱的OpenWRT，不然就一个插件轻松搞定了。 </p>
 <p>本来我是想直接把光猫或者待开机的电脑的IPV6地址通过DDNS暴露出去，然后直接远程发包的，然而这光猫的DDNS功能甚至不支持ipv6,第一步就尬住了，直接放弃。</p>
 <p>后来发现了前人走过的路，<a target="_blank" rel="noopener" href="https://gitee.com/itrycn/MyEasyWOL">MyEasyWOL</a>，可惜Android服务端安装包有点不兼容装不上，客户端是好的。</p>

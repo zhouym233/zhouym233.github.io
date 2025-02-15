@@ -19,17 +19,17 @@
   <meta name="author" content="zhou">
   <meta name="keywords" content="tech,fun,otaku,blog">
   
-    <meta name="description" content="故事背景SSH爆破真是令人厌烦，动不动上万次的密码尝试属实难绷。爆破密集到一定程度甚至有点浪费我宝贵的服务器带宽，并且有点担心我那并不算长的密码被试出来。改端口和禁用密码验证是可行方案，但是会造成一定程度上的不便，本懒狗暂时不考虑。   初步尝试网上随便搜了搜教程，了解到可以用pam_tally2模块来防爆破。配置好这个模块后才发现，该模块的行为是  限制登录失败时可以锁定用户一段时间，就算密码输">
+    <meta name="description" content="防止服务器被攻击的必要手段之一">
 <meta property="og:type" content="article">
 <meta property="og:title" content="用fail2ban屏蔽SSH爆破">
 <meta property="og:url" content="https://zhouym.tech/2021/fail2ban/index.html">
 <meta property="og:site_name" content="我只会摸鱼">
-<meta property="og:description" content="故事背景SSH爆破真是令人厌烦，动不动上万次的密码尝试属实难绷。爆破密集到一定程度甚至有点浪费我宝贵的服务器带宽，并且有点担心我那并不算长的密码被试出来。改端口和禁用密码验证是可行方案，但是会造成一定程度上的不便，本懒狗暂时不考虑。   初步尝试网上随便搜了搜教程，了解到可以用pam_tally2模块来防爆破。配置好这个模块后才发现，该模块的行为是  限制登录失败时可以锁定用户一段时间，就算密码输">
+<meta property="og:description" content="防止服务器被攻击的必要手段之一">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zhouym.tech/images/SSH.png">
 <meta property="og:image" content="https://zhouym.tech/images/fail2ban_status.png">
 <meta property="article:published_time" content="2021-12-01T14:15:59.000Z">
-<meta property="article:modified_time" content="2021-12-09T16:24:20.742Z">
+<meta property="article:modified_time" content="2025-02-15T10:06:37.732Z">
 <meta property="article:author" content="zhou">
 <meta property="article:tag" content="tech,fun,otaku,blog">
 <meta name="twitter:card" content="summary_large_image">
